@@ -12,7 +12,7 @@ module top_module(
 
     
     reg [2:0] state,nstate;
-    parameter left=0,right=1,fleft=2,fright=3,dleft=4,dright=5,splat=6;
+    parameter left=3'd0,right=3'd1,fleft=3'd2,fright=3'd3,dleft=3'd4,dright=3'd5,splat=3'd6,calm=3'd7;
     
     //mod 20 counter 
     wire [4:0]count_out;
@@ -57,7 +57,10 @@ module top_module(
                 if (~ground) nstate=fright;
                 else nstate=dright;
             end
-            splat:nstate=splat;
+            splat:begin
+                if (~ground)nstate=splat;
+                else nstate=calm;
+            end
                 
             default:nstate=state;
         endcase
@@ -78,7 +81,8 @@ module top_module(
             fright:{walk_left,walk_right,aaah,digging}=4'b0010;
             dleft:{walk_left,walk_right,aaah,digging}=4'b0001;
             dright:{walk_left,walk_right,aaah,digging}=4'b0001;
-            splat:{walk_left,walk_right,aaah,digging}=4'b0000;
+            splat:{walk_left,walk_right,aaah,digging}=4'b0010;
+            calm:{walk_left,walk_right,aaah,digging}=4'b0000;
         endcase
     end
 
